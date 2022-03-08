@@ -1,17 +1,16 @@
 module Hasql.OptparseApplicative where
 
 import BasePrelude hiding (option)
-import Options.Applicative
 import qualified Hasql.Connection as A
 import qualified Hasql.Pool as B
-
+import Options.Applicative
 
 -- |
 -- Given a function, which updates the long names produces a parser of @B.'B.Settings'@.
 -- You can use this function to prefix the name or you can just specify 'id', if you don't want it changed.
 poolSettings :: (String -> String) -> Parser B.Settings
 poolSettings updatedName =
-  (,,) <$> size <*> timeout <*> connectionSettings updatedName
+    B.Settings <$> size <*> timeout <*> connectionSettings updatedName <*> pure B.defaultOnQueryError
   where
     size =
       option auto $
